@@ -1,10 +1,17 @@
+TRANSFERER SUR ASANA
+
+
 methods::setClass("Clustering",
 
 Description de à quoi ça sert 
 
 
+FONCTIONS A TESTER
 
-FONCTION SUPPRIMEES
+dans 2_FCS_Markers_CYTdata.R : 
+  removeDuplicates
+
+FONCTIONS SUPPRIMEES
 
 dans 1_CYTdata_classes.R : 
   printos
