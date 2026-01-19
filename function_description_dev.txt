@@ -1,3 +1,12 @@
 methods::setClass("Clustering",
 
 Description de à quoi ça sert 
+
+
+
+FONCTION SUPPRIMEES
+
+dans 1_CYTdata_classes.R : 
+  printos
+  methods::setGeneric("show.clustering") + autres vers ligne 820
+  show.CYTdata
