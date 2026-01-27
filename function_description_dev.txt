@@ -1,3 +1,0 @@
-methods::setClass("Clustering",
-
-Description de à quoi ça sert 
