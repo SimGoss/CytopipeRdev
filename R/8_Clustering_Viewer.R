@@ -97,6 +97,105 @@ plotPopulationCounts <- function(CYTdata,
 }
 
 
+#' @title Plots a diagram showing correlated markers
+#'
+#' @description This function aims to visualize the pairwise co-expression between all markers.
+#' Each tile corresponds to the co-expression between two markers and is gradient-colored based on the Pearson or Spearman correlation
+#'
+#' @param CYTdata a CYTdata object
+#' @param markers a character vector containing the name of the markers to analyse
+#' @param population a character vector containing the identifiers of the population to use. By default, all the population are used
+#' @param level a character value indicating the type of population plotted. Possible values are: "clusters", "metaclusters". By default, 'clusters' are used.
+#' @param samples a character vector containing the name of the samples to consider
+#' @param method a character value indicating the name of correlation method to use, "pearson" (default) or "spearman"
+#' @param palette optionnal; a vector of color names to use for the gradient. 
+
+#'
+#' @return a list with:
+#'  - corPlot: a ggplot2 object, the correlation diagram
+#'  - corMatrix: the correlation matrix
+#'
+#' @export
+#'
+plotCorrDiagram <- function(CYTdata,
+                            markers = NULL,
+                            population = NULL,
+                            level = c("clusters", "metaclusters"),
+                            samples = NULL,
+                            method = c("pearson","spearman"),
+                            palette = NULL) { #c("yellow", "orange", "red", "brown")
+  
+  if (class(CYTdata)!="CYTdata") { stop("Error : argument 'CYTdata' a S4 object of class 'CYTdata'.") }
+  else { validObject(CYTdata) }
+  
+  markers = checkorderMarkers(CYTdata, markers, order=FALSE, checkDuplicates=TRUE)
+  
+  level = match.arg(level)
+  checkmate::qassert(level, "S1")
+  population = checkorderPopulation(CYTdata, population=population, level=level,
+                                    order=TRUE, checkDuplicates=TRUE)
+  samples = checkorderSamples(CYTdata, samples,
+                              order=TRUE, checkDuplicates=TRUE)
+  
+  method = match.arg(method)
+  checkmate::qassert(method, "S1")
+  
+  checkmate::qassert(palette, c("0", "S*"))
+  
+  if(level == "clusters") { popId = CYTdata@Clustering@clusters }
+  else { popId = CYTdata@Metaclustering@metaclusters }
+  
+  data = subset(CYTdata@matrix.expression[,markers],
+                popId %in% population & CYTdata@samples %in% samples)
+  
+  corMatrix = round(stats::cor(data, method = method), 3)
+  # dist = stats::as.dist(1 - corMatrix) #CAUTION : this causes the data to not be in the same order as markers, which ultimately gives completely false graphs. 
+  # hc = stats::hclust(dist)
+  # corMatrix = corMatrix[hc$order, hc$order]
+  corMatrix[upper.tri(corMatrix, diag = TRUE)] = NA
+  
+  # print(corMatrix)
+  
+  corMatrixmelted = reshape2::melt(corMatrix)
+  
+  # print(corMatrixmelted)
+  
+  plot <- ggplot2::ggplot(data = corMatrixmelted,
+                          ggplot2::aes_string(x = "Var1",
+                                              y = "Var2",
+                                              fill = "value")) +
+    ggplot2::ggtitle("Correlation diagram") +
+    ggplot2::geom_tile(color = "white")
+  
+  
+  if(!is.null(palette)){
+    if(!all(areColors(palette))){
+      stop("Error : 'palette' argument (", paste0(palette, collapse = ","),
+           ") does not contain only hexadecimal color.)")
+    }
+    plot <- plot + ggplot2::scale_fill_gradientn(colours = palette, na.value = "white", name = paste(method, "correlation"))
+  }
+  else {
+    plot <- plot + ggplot2::scale_fill_gradient2(low = "#20aaff", high = "orange", mid = "black",
+                                                 midpoint = 0, limit = c(-1, 1), na.value = "white",
+                                                 name = paste(method, "correlation"),
+                                                 oob = scales::oob_squish)
+  }
+  
+  plot <- plot +
+    ggplot2::coord_fixed() +
+    ggplot2::scale_y_discrete(position = "right") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = 0.5),
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_text(angle = 60, hjust = 1),
+      axis.text.y = ggplot2::element_text(hjust = 0)) 
+  
+  return(list("corPlot" = plot,
+              "corMatrix" = corMatrix))
+}
 
 
 
