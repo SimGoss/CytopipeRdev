@@ -141,7 +141,6 @@ createCYTdata <- function(files,
   CYTdata <- methods::new("CYTdata",
                           matrix.expression = exprs,
                           samples = samples,
-                          
                           Clustering = Clustering(),
                           Metaclustering = Metaclustering(),
                           DimReduction = DimReduction(),
