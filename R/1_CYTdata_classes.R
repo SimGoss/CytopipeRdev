@@ -754,3 +754,36 @@ Metaclustering <- methods::setClass("Metaclustering",
                                               palette = "vector",
                                               optional_parameters = "list",
                                               optional_HierarchicalHeatmap = "list"))
+
+#' @title DimReduction class definition
+#'
+#' @description The DimReduction object is a S4 object containing all the data concerning the DimReduction step performed on a 'CYTdata' object
+#'
+#' @slot coordinates a data.frame containing the coordinates data points in the reduced data space
+#' @slot optional_parameters a list containing the parameters used for DimReduction computation (especially the arguments of 'run.DimReduction' function : seed, markers, type, etc.)
+#'
+#' @name DimReduction-class
+#' @rdname DimReduction-class
+#' @exportClass DimReduction
+#'
+
+DimReduction <- methods::setClass("DimReduction",
+                                  slots = c(coordinates = "data.frame",
+                                            optional_parameters = "list"))
+
+#' @title Kinetic class definition
+#'
+#' @description The Kinetic object is a S4 object containing all the data concerning a kinetic clustering step performed on a 'CYTdata' object
+#'
+#' @slot families a data.frame containing the identifiers of metaclusters kinetic families computed with 'run.Kinetic' function
+#' @slot optional_parameters a list containing the parameters used for kinetic clustering (especially the arguments of 'run.Kinetic' function : N.kinetics, sample.subset, etc.)
+#'
+#' @name Kinetic-class
+#' @rdname Kinetic-class
+#' @exportClass Kinetic
+#'
+
+Kinetic <- methods::setClass("Kinetic",
+                             slots = c(families = "factor",
+                                       optional_parameters = "list"))
+

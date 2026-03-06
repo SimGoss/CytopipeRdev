@@ -42,7 +42,7 @@ importMetadata <- function(CYTdata, metadataDf, checkOverwrite = TRUE){
          ") are not concordant with the sample levels (", paste0(levels(CYTdata@samples), collapse = ","), ").")
   }
   if (!all(c("Individual", "Timepoint") %in% colnames(metadataDf))) {
-    stop("Error: Colnames must contain 'Individual' and 'Timepoint' (But it contains : ", paste0(colnames(CYTdata@metadata), collapse = ","), ")")
+    stop("Error: Colnames must contain 'Individual' and 'Timepoint' (it contains:", paste0(colnames(metadataDf), collapse = ","), ")")
   }
   
   cat("\n\nConverting metadata columns to factor..")

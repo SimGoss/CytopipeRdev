@@ -299,11 +299,11 @@ plotLineplot <- function(CYTdata,
   
   for (pop in population){ 
     
-    popRelAbundance[[pop]] = Bahamas::getRelativeAbundance(CYTdata,
-                                                           population = pop,
-                                                           samples = samples,
-                                                           level = level, 
-                                                           Yvalue = Yvalue) %>%
+    popRelAbundance[[pop]] = getRelativeAbundance(CYTdata,
+                                                  population = pop,
+                                                  samples = samples,
+                                                  level = level, 
+                                                  Yvalue = Yvalue) %>%
       reshape2::melt() %>% 
       reshape2::dcast(Individual~Timepoint) %>%
       tibble::column_to_rownames(var = "Individual")
@@ -945,11 +945,11 @@ plotLineplotInd <- function(CYTdata,
       
     } else {
       
-      popRelAbundance[[pop]] = Bahamas::getRelativeAbundance(CYTdata,
-                                                             population = pop,
-                                                             samples = samples,
-                                                             level = level, 
-                                                             Yvalue = Yvalue) %>%
+      popRelAbundance[[pop]] = getRelativeAbundance(CYTdata,
+                                                    population = pop,
+                                                    samples = samples,
+                                                    level = level, 
+                                                    Yvalue = Yvalue) %>%
         reshape2::melt() %>% 
         reshape2::dcast(Individual~Timepoint) %>%
         tibble::column_to_rownames(var = "Individual")
