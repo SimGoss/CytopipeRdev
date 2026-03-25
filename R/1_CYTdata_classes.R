@@ -411,10 +411,10 @@ CYTdata <- methods::setClass("CYTdata",
                                  if (any(is.na(colnames(object@DimReduction@coordinates)))) {
                                    stop("Error in  CYTdata@DimReduction object: DimReduction coordinates colnames contain NA values.")
                                  }
-                                 if (ncol(object@DimReduction@coordinates)!=2) {
-                                   stop("Error in  CYTdata@DimReduction object: DimReduction coordinates must be 2D dataframe ( ",
-                                        ncol(object@DimReduction@coordinates), " dimensions here).")
-                                 }
+                                 # if (ncol(object@DimReduction@coordinates)!=2) {
+                                 #   stop("Error in  CYTdata@DimReduction object: DimReduction coordinates must be 2D dataframe ( ",
+                                 #        ncol(object@DimReduction@coordinates), " dimensions here).")
+                                 # }
                                }
                                
                                # If no coordinates, nothing should exist
@@ -782,10 +782,10 @@ MakeValid <- function(CYTdata, verbose = TRUE){
            length(CYTdata@samples), ", is inconsistent with the number of coordinates in the embedded space (",
            nrow(CYTdata@DimReduction@coordinates), ").")
     }
-    if (ncol(CYTdata@DimReduction@coordinates)!=2) {
-      stop("Error in CYTdata@DimReduction object: DimReduction coordinates must be 2D dataframe ( ",
-           ncol(CYTdata@DimReduction@coordinates), " dimensions here).")
-    }
+    # if (ncol(CYTdata@DimReduction@coordinates)!=2) {
+    #   stop("Error in CYTdata@DimReduction object: DimReduction coordinates must be 2D dataframe ( ",
+    #        ncol(CYTdata@DimReduction@coordinates), " dimensions here).")
+    # }
     if (any(is.na(colnames(CYTdata@DimReduction@coordinates)))) {
       if (verbose) message("Warning in CYTdata@DimReduction object: DimReduction coordinates colnames contain NA values.
               Setting it to default name (dim1, dim2)..")

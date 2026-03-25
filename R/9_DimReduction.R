@@ -83,6 +83,7 @@ removeDimReduction <- function(CYTdata) {
 #' @param type a character value containing the type of RD method to use. Possible values are: "UMAP", "tSNE", "lvish", "PCA" (default = UMAP)
 #' @param seed a numeric value providing the random seed to use during stochastic operations
 #' @param checkOverwrite a boolean, if TRUE (default), will pause and display a warning if a DimReduction is already present in the CYTdata and must be overwritten. 
+#' @param n_components a numeric value providing the number of dimensions to compute for non linear dimension reduction methods, or to keep in the case of PCA. Please note tSNE does not accept more than 3 dimensions. 
 #' @param ... additional arguments passed on to method from R package.
 #' For PCA, please refer to prcomp method from stats package : https://rdrr.io/r/stats/stats-package.html
 #' For UMAP, please refer to umap method from uwot package : https://cran.r-project.org/web/packages/uwot/uwot.pdf
@@ -101,6 +102,7 @@ runDimReduction <- function(CYTdata,
                             type = c("UMAP", "tSNE", "lvish", "PCA"),
                             seed = 42,
                             checkOverwrite = TRUE,
+                            n_components = 2,
                             ...){
   
   if (class(CYTdata)!="CYTdata") { stop("Error : argument 'CYTdata' a S4 object of class 'CYTdata'.") }
@@ -110,6 +112,7 @@ runDimReduction <- function(CYTdata,
   checkmate::qassert(type, "S1")
   checkmate::qassert(markers, c(0,"S*"))
   checkmate::qassert(seed, "N1")
+  checkmate::qassert(n_components, "N1")
   list.parameters = list(...)
   
   if (checkOverwrite && length(CYTdata@DimReduction@coordinates)!=0){
@@ -121,43 +124,42 @@ runDimReduction <- function(CYTdata,
   markers = checkorderMarkers(CYTdata, markers = markers, order = TRUE)
   data = CYTdata@matrix.expression[,markers]
   
-  cat("\nGenerate manifold using", type, " :")
-  cat("\n\n - Markers used to generate 2D-reduced data space : ", paste0(markers, collapse = ", "), "\n\n")
-
+  cat("\nGenerating manifold in",n_components,"dimensions using", type, ":")
+  cat("\nMarkers used to generate reduced data space :", paste0(markers, collapse = ", "), "\n")
+  
   set.seed(seed)
   
   switch(type,
          UMAP = {
-           manifold <- uwot::umap(data, ...)
+           manifold <- uwot::umap(data, n_components = n_components, ...)
          },
          tSNE = {
-           manifold <- Rtsne::Rtsne(data, ...)$Y
+           manifold <- Rtsne::Rtsne(data, dims = n_components, ...)$Y
          },
          lvish = {
-           manifold <- uwot::lvish(data, ...)
+           manifold <- uwot::lvish(data, n_components = n_components, ...)
          },
          PCA = {
            PC <- stats::prcomp(data, ...) # Compute PCA
-           manifold = PC$x[,1:2]
+           manifold = PC$x[,1:n_components]
          })
   
   coordinates = data.frame(manifold)
-  colnames(coordinates) = c("dim1", "dim2")
+  colnames(coordinates) = paste("dim", 1:n_components, sep = "")
   
   # Put into "DimReduction" object
-  cat("\n\nCreating DimReduction object and updating CYTdata object.. \n")
+  cat("Creating DimReduction object and updating CYTdata object... \n")
   DimReduction.object <- methods::new("DimReduction",
                                       coordinates = coordinates,
                                       optional_parameters = append(list.parameters,
                                                                    list("type" = type,
                                                                         "markers" = markers,
-                                                                        "seed" = seed)))
+                                                                        "seed" = seed,
+                                                                        "n_components" = n_components)))
   CYTdata@DimReduction = DimReduction.object
   validObject(CYTdata)
   return(CYTdata)
 }
-
-
 
 
 

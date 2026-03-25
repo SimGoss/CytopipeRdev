@@ -14,6 +14,7 @@
 #' Possible values are "density" (default, the points are colors according to cell density as if in a 2D histogram) and "metadata" (the points are coloured according a specified metadata)
 #' @param title a character value providing the title for the graph. Defaults to "Dimensionnality reduction view"
 #' @param metadata a character vector containing the type of metadata to study, if plotType = "metadata".
+#' @param axes a numeric of length 2 indicating the axes to display. Defaults to 1 and 2. 
 #'
 #' @return a ggplot2 object
 #'
@@ -26,7 +27,8 @@ plotDimReduction <- function(CYTdata,
                              level = c("clusters", "metaclusters"),
                              plotType = c("density", "metadata"),
                              title = "Dimensionnality reduction view",
-                             metadata = "Timepoint") {
+                             metadata = "Timepoint",
+                             axes = c(1, 2)) {
   
   if (class(CYTdata)!="CYTdata") { stop("Error : argument 'CYTdata' a S4 object of class 'CYTdata'.") }
   else { CYTdata = MakeValid(CYTdata, verbose = TRUE) }
@@ -38,13 +40,15 @@ plotDimReduction <- function(CYTdata,
   plotType = match.arg(plotType)
   
   checkmate::qassert(title, "S1")
-
+  
   checkmate::qassert(metadata, "S1")
+  checkmate::qassert(axes, "N2")
+  
   if (!metadata %in% colnames(CYTdata@metadata)){
     stop("Error : 'metadata' argument is not a metadata (e.g. 'Timepoint', 'Individual')")
   }
   
-  data = CYTdata@DimReduction@coordinates
+  data = CYTdata@DimReduction@coordinates[,axes]
   if (nrow(data)==0) { stop("Error : Dimensionnality reduction is null, please compute dimensionnality reduction algorithm before vizualization") }
   if (ncol(data)!=2) { stop("Error : Impossible to visualize, embedding not in 2D") }
   
@@ -104,23 +108,14 @@ plotDimReduction <- function(CYTdata,
   }
   
   if (!is.null(CYTdata@DimReduction@optional_parameters$type)){
-    labs = paste(CYTdata@DimReduction@optional_parameters$type, 1:2, sep = "")
-  } else { labs = c("dim1","dim2")}
+    labs = paste(CYTdata@DimReduction@optional_parameters$type, axes, sep = "")
+  } else { labs = paste("dim", axes, sep = "")}
   
   plot <- plot +
     ggplot2::xlab(labs[1]) + ggplot2::ylab(labs[2]) +
     ggplot2::ggtitle(title) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
-                   axis.title = ggplot2::element_text(size=10,face="bold"),
-                   axis.text = ggplot2::element_blank(),
-                   axis.line = ggplot2::element_line(colour = "black"),
-                   panel.grid.major = ggplot2::element_blank(),
-                   panel.grid.minor = ggplot2::element_blank(),
-                   panel.background = ggplot2::element_blank(),
-                   aspect.ratio = 1,
-                   legend.position = legendPosition,
-                   legend.title = ggplot2::element_text(hjust = 0.5, vjust = 1, face = 'bold'))
+    ggplot2::coord_fixed() +
+    ggplot2::theme_minimal()
   
   return(plot)
 }
@@ -138,6 +133,7 @@ plotDimReduction <- function(CYTdata,
 #' @param bounds a numeric providing the two quantiles that will be used to bind the expression of the marker. Defaults to c(0.05, 0.95).
 #' @param relativeGradient a boolean. If TRUE, marker expression will be bound according to the marker's expression in the selected populations and/or samples. If FALSE (default), the entire cell population will be used. 
 #' @param paletteGradient a character vector containing the colors to use for the gradient scale. Defaults to a blue/red gradient. 
+#' @param axes a numeric of length 2 indicating the axes to display. Defaults to 1 and 2. 
 #'
 #' @return a ggplot2 object
 #'
@@ -151,13 +147,15 @@ plotDimRedGradient <- function(CYTdata,
                                samples = NULL,
                                bounds = c(0.05, 0.95),
                                relativeGradient = FALSE,
-                               paletteGradient = NULL) { #c("yellow", "orange", "red", "brown")
+                               paletteGradient = NULL,#c("yellow", "orange", "red", "brown")
+                               axes = c(1, 2)) { 
   
   if (class(CYTdata)!="CYTdata") { stop("Error : argument 'CYTdata' a S4 object of class 'CYTdata'.") }
   else { CYTdata = MakeValid(CYTdata, verbose = TRUE) }
   
   checkmate::qassert(marker, "S1")
   marker = checkorderMarkers(CYTdata, marker, order=TRUE, checkDuplicates=TRUE)
+  checkmate::qassert(axes, "N2")
   
   checkmate::qassert(samples, c("0","S*"))
   samples = checkorderSamples(CYTdata, samples, order=TRUE, checkDuplicates=TRUE)
@@ -189,7 +187,7 @@ plotDimRedGradient <- function(CYTdata,
   }
   else { paletteGradient = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(9,"RdBu")))(85) }
   
-  data = CYTdata@DimReduction@coordinates
+  data = CYTdata@DimReduction@coordinates[,axes]
   if (nrow(data) == 0) { stop("Error : Dimensionnality reduction is null, please compute dimensionnality reduction algorithm before vizualization") }
   if (ncol(data)!=2) { stop("Error : Impossible to visualize, embedding not in 2D") }
   
@@ -221,9 +219,8 @@ plotDimRedGradient <- function(CYTdata,
   
   
   if (!is.null(CYTdata@DimReduction@optional_parameters$type)){
-    labs = paste(CYTdata@DimReduction@optional_parameters$type, 1:2, sep = "")
-  }
-  else { labs = c("dim1","dim2") }
+    labs = paste(CYTdata@DimReduction@optional_parameters$type, axes, sep = "")
+  } else { labs = paste("dim", axes, sep = "")}
   
   plot <- plot + ggplot2::geom_point(data = dataColored,
                                      ggplot2::aes_string(x = colnames(dataColored)[1],
@@ -235,17 +232,8 @@ plotDimRedGradient <- function(CYTdata,
     ggplot2::scale_y_continuous(expand = c(0.01,0.01)) +
     ggplot2::labs(title = paste0(marker,"'s gradient representation"), col = marker) +
     ggplot2::xlab(labs[1]) + ggplot2::ylab(labs[2]) +
-    ggplot2::theme_bw() +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
-                   axis.title = ggplot2::element_text(size=10,face="bold"),
-                   axis.text = ggplot2::element_blank(),
-                   axis.line = ggplot2::element_line(colour = "black"),
-                   panel.grid.major = ggplot2::element_blank(),
-                   panel.grid.minor = ggplot2::element_blank(),
-                   panel.background = ggplot2::element_blank(),
-                   aspect.ratio = 1,
-                   legend.position = "bottom",
-                   legend.title = ggplot2::element_text(hjust = 0.5, vjust = 1, face = 'bold'))
+    ggplot2::coord_fixed() +
+    ggplot2::theme_minimal()
   
   return(plot)
 }
@@ -260,6 +248,7 @@ plotDimRedGradient <- function(CYTdata,
 #' @param level a character value indicating the type of population filtered by the population argument. Possible values are: "clusters", "metaclusters". By default, 'clusters' are used.
 #' @param samples a character vector containing the names of the biological samples to plot. Non included samples will still be ploted, but in grey. 
 #' @param printCentroid a boolean. If TRUE (default), displays the name of each population at that population's centroid position. 
+#' @param axes a numeric of length 2 indicating the axes to display. Defaults to 1 and 2. 
 #'
 #' @return a ggplot2 object
 #'
@@ -270,7 +259,8 @@ plotDimRedPopulations <- function(CYTdata,
                                   population = NULL,
                                   level = c("clusters", "metaclusters"),
                                   samples = NULL,
-                                  printCentroid = TRUE) {
+                                  printCentroid = TRUE,
+                                  axes = c(1, 2)) {
   
   if (class(CYTdata)!="CYTdata") { stop("Error : argument 'CYTdata' a S4 object of class 'CYTdata'.") }
   else { CYTdata = MakeValid(CYTdata, verbose = TRUE) }
@@ -281,6 +271,7 @@ plotDimRedPopulations <- function(CYTdata,
                                     order=TRUE, checkDuplicates=TRUE)
   samples = checkorderSamples(CYTdata, samples, order=TRUE)
   checkmate::qassert(printCentroid, "B1")
+  checkmate::qassert(axes, "N2")
   
   if(level == "clusters") {
     palette = CYTdata@Clustering@palette
@@ -291,7 +282,7 @@ plotDimRedPopulations <- function(CYTdata,
     popId = CYTdata@Metaclustering@metaclusters
   }
   
-  data = CYTdata@DimReduction@coordinates
+  data = CYTdata@DimReduction@coordinates[,axes]
   if (nrow(data) == 0) { stop("Error : Dimensionnality reduction is null, please compute dimensionnality reduction algorithm before vizualization") }
   if (ncol(data)!=2) { stop("Error : Impossible to visualize, embedding not in 2D") }
   data$popId = popId
@@ -332,28 +323,14 @@ plotDimRedPopulations <- function(CYTdata,
                                color = "black", size = 3, force = 5)
   }
   
-  type = CYTdata@DimReduction@optional_parameters$type
-  if (is.null(type)) { type = "dim" }
-  labs = paste(type, 1:2, sep = "")
+  if (!is.null(CYTdata@DimReduction@optional_parameters$type)){
+    labs = paste(CYTdata@DimReduction@optional_parameters$type, axes, sep = "")
+  } else { labs = paste("dim", axes, sep = "")}
   
   plot <- plot +
-    ggplot2::theme_bw() +
     ggplot2::xlab(labs[1]) + ggplot2::ylab(labs[2]) +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
-                   axis.title = ggplot2::element_text(size=5,face="bold"),
-                   axis.text = ggplot2::element_blank(),
-                   axis.line = ggplot2::element_line(colour = "black"),
-                   panel.grid.major = ggplot2::element_blank(),
-                   panel.grid.minor = ggplot2::element_blank(),
-                   panel.background = ggplot2::element_blank(),
-                   aspect.ratio = 1,
-                   legend.title = ggplot2::element_text(size=22, hjust = 0.5, vjust = 1, face = 'bold'),
-                   legend.key.size = unit(10, 'cm'), #change legend key size
-                   legend.key.height = unit(0.8, 'cm'), #change legend key height
-                   legend.key.width = unit(2.5, 'cm'), #change legend key width
-                   legend.text = ggplot2::element_text(size=20)) #change legend text font size)
+    ggplot2::coord_fixed() +
+    ggplot2::theme_minimal()
   
   return(plot)
 }
-
-
