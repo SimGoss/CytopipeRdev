@@ -86,7 +86,7 @@ rescale.exprs <- function(exprs,
 
 #' @title Computes median or mean for a set of marker expression
 #'
-#' @description sss
+#' @description Computes median or mean expression for a set of given markers, per cluster or per metacluster
 #'
 #' @param CYTdata a S4 object of class 'CYTdata'
 #' @param markers a vector object listing marker names
@@ -95,8 +95,8 @@ rescale.exprs <- function(exprs,
 #' @param typeMSI a character value to choose between "median" (default) and "mean".
 #' @param rescaleBounds a numeric value providing the value of the first quantile and last quantile for the rescaled values, to be passed to rescale.exprs()
 #' @param scale Logical. If TRUE, rescales the value of each marker's expression to the bounds indicated in rescaleBounds
-
-#' @return 
+#' 
+#' @return a dataframe
 #'
 
 computeMSI <- function(CYTdata,
@@ -256,7 +256,6 @@ manualMetaclustering <- function(CYTdata,
 
 
 #' @title Performs hierarchical classification of the clusters (metaclustering) 
-#'
 #'
 #' @description This function aims to identify metaclusters, which are groups of clusters having similar expressions for selected markers. 
 #' The mean or median marker expressions is computed for each cluster, and used to compute hierarchical clustering using stats::hclust

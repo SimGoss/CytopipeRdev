@@ -270,7 +270,6 @@ run.cyCombine <- function(CYTdata,
 #' @param transformList.reverse.validation Transformation list to pass to the flowCore to transform validation data after correction.
 #' In an attempt to get raw corrected validation data. Default : reverse of transformList.validation transformation for the same channels
 #' @param FlowSOM.params List with parameters to pass to the FlowSOM algorithm. Default = list(nCells = 1000000, xdim = 15, ydim = 15, nclus = 30, scale = FALSE).
-#' @param normParams
 #' @param tmpDir Directory to put the temporary files in. Default = "./tmp
 #' @param outputDir Directory to put the temporary files in. Default = "."
 #' @param prefix Prefix to put in front of the normalized file names. Default = "Norm_"

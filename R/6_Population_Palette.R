@@ -21,7 +21,6 @@ checkorderPopulation <- function(CYTdata, population, level, order = TRUE, check
   checkmate::qassert(population, c("0","S*"))
   checkmate::qassert(order, "B1")
   checkmate::qassert(level, "S1")
-  level = match.arg(level)
   
   if (!is.null(population) && length(population)==0) {
     stop("Error : 'population' argument is an empty vector (length=0, but non NULL).")

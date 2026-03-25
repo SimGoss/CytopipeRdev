@@ -209,8 +209,8 @@ renameSamples <- function(CYTdata, from = NULL, to, merge = FALSE){
 
 #' @title Get the sample names associated to a specific metadata
 #' 
-#'#' @description This function takes a given metadata (e.g. "Timepoint" or "Individual") and returns a list giving the sample names associated with each level of the condition, e.g, each sample associated to "Timepoint" = "BSL", "D1", etc.  
-
+#'@description This function takes a given metadata (e.g. "Timepoint" or "Individual") and returns a list giving the sample names associated with each level of the condition, e.g, each sample associated to "Timepoint" = "BSL", "D1", etc.  
+#'
 #' @param CYTdata a S4 object of class 'CYTdata'
 #' @param metadataCondition a string specifying the metadata condition chosen. The string has to be the name of the column (in metadata data.frame) containing the condition chosen
 #'

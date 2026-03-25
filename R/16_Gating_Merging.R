@@ -110,7 +110,7 @@ CYTdataGating <- function(CYTdata,
 
 #' @title Merge two CYTdata objects
 #'
-#' @description 
+#' @description Merge two CYTdata objects. 
 #'
 #' @param CYTdata1 a S4 object of class 'CYTdata'
 #' @param CYTdata1Name a character vector containing the name for the first CYTdata object. Defaults to "CYTdata1"
