@@ -20,4 +20,9 @@ Imports:
 	utils, FNN, parallelDist, cluster, cytofkit2, dbscan, 
 	FlowSOM, kohonen, dendextend, scales, shades, diptest, 
 	doParallel, parallel, Rtsne, uwot
+Remotes:
+	git::biosurf/cyCombine
+	git::saeyslab/CytoNorm
+	git::JinmiaoChenLab/cytofkit2
+	bioc::flowCore
 RoxygenNote: 7.3.3
