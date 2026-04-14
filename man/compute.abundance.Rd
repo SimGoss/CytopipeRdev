@@ -4,7 +4,7 @@
 \alias{compute.abundance}
 \title{Internal - Computes the relative abundances for each cell population}
 \usage{
-compute.abundance(cellcount)
+\method{compute}{abundance}(cellcount)
 }
 \arguments{
 \item{cellcount}{a data.frame providing the numbers of cells associated to each population for each sample}

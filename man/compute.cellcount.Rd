@@ -4,7 +4,7 @@
 \alias{compute.cellcount}
 \title{Internal - Computes the number of cells for each population}
 \usage{
-compute.cellcount(population, samples)
+\method{compute}{cellcount}(population, samples)
 }
 \arguments{
 \item{population}{a character vector providing the population to count the cells belonging to}

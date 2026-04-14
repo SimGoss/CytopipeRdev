@@ -8,5 +8,5 @@
 #'
 #' @docType package
 #' @name CytopipeRdev
-NULL
+"_PACKAGE"
 

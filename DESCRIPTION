@@ -4,8 +4,20 @@ Title: Analyses for cytometry data
 Version: 0.1.1
 Author: Paul MAZET, Cyril ETIENNE, Aurélien MARC
 Maintainer: Cyril ETIENNE <cyril.etienne@cea.fr>
-Description: To do
+Description: 
+	This package is intended primarily for use at the IDMIT lab (https://jacob.cea.fr/drf/ifrancoisjacob/english/Pages/Departments/IDMIT.aspx).
+	It has been developped initially by Paul MAZET, then continued by Cyril ETIENNE and Aurélien MARC.
+	Any questions regarding the use of the package can be adressed to cyril.etienne@cea.fr or the IBI lab of IDMIT.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Imports:
+	checkmate, dplyr, methods, ggplot2, plyr, RANN, 
+	stats, ggnewscale, ggpointdensity, ggrepel, grDevices, RColorBrewer, 
+	robustbase, viridis, reshape2, rstatix, ggpubr, matrixStats, 
+	purrr, reshape, tibble, ggridges, MASS, Biobase, 
+	cyCombine, CytoNorm, flowCore, lme4, rlang, stringr, 
+	utils, FNN, parallelDist, cluster, cytofkit2, dbscan, 
+	FlowSOM, kohonen, dendextend, scales, shades, diptest, 
+	doParallel, parallel, Rtsne, uwot
 RoxygenNote: 7.3.3
