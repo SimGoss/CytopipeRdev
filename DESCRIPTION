@@ -21,8 +21,8 @@ Imports:
 	FlowSOM, kohonen, dendextend, scales, shades, diptest, 
 	doParallel, parallel, Rtsne, uwot
 Remotes:
-	git::biosurf/cyCombine
-	git::saeyslab/CytoNorm
-	git::JinmiaoChenLab/cytofkit2
+	https://github.com/biosurf/cyCombine.git
+	https://github.com/saeyslab/CytoNorm.git
+	https://github.com/JinmiaoChenLab/cytofkit2.git
 	bioc::flowCore
 RoxygenNote: 7.3.3
