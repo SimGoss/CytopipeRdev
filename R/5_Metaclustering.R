@@ -64,6 +64,8 @@ removeMetaclustering <- function(CYTdata) {
 #' @param rescaleBounds a numeric value providing the value of the first quantile and last quantile
 #'
 #' @return a numeric containing quantile rescale marker expressions
+#' 
+#' @export
 #'
 
 rescale.exprs <- function(exprs,
@@ -97,6 +99,8 @@ rescale.exprs <- function(exprs,
 #' @param scale Logical. If TRUE, rescales the value of each marker's expression to the bounds indicated in rescaleBounds
 #' 
 #' @return a dataframe
+#' 
+#' @export
 #'
 
 computeMSI <- function(CYTdata,
