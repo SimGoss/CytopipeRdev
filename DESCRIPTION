@@ -1,7 +1,7 @@
 Package: CytopipeRdev
 Type: Package
 Title: Analyses for cytometry data
-Version: 0.1.1
+Version: 0.1.2
 Author: Paul MAZET, Cyril ETIENNE, Aurélien MARC
 Maintainer: Cyril ETIENNE <cyril.etienne@cea.fr>
 Description: 
