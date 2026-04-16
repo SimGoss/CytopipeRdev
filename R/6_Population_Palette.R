@@ -260,7 +260,7 @@ getMetaclustersMembership <- function(CYTdata, format = c("list", "data.frame"))
   checkmate::qassert(format, "S1")
   
   if (length(CYTdata@Metaclustering@metaclusters)==0 || length(CYTdata@Clustering@clusters)==0) {
-    stop()
+    stop("Error : no clusters or metaclusters found.")
   }
   
   if (format=="list") {

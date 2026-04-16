@@ -329,7 +329,7 @@ computeQCuniform <- function(CYTdata,
     rownames(Pvalue) = population
     colnames(Pvalue) = colnames(data)[-1]
     print(Pvalue)
-    Uniform = data.frame(Pvalue > thPvalue & IQR <= thIQR, 
+    Uniform = data.frame(Pvalue >= thPvalue & IQR <= thIQR, 
                          check.names = FALSE)
     print(Uniform)
     rownames(Uniform) = population
